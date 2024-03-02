@@ -109,11 +109,25 @@ int main(void)
         // OLED_Refresh_Gram();
         MPU6050_Proc();
         MPU6050_GetResult(pAccelOut, &pTempOut, pGyroOut, pEularAngleOut);
-        printf("pAccelOut: %f %f %f\r\n",
-               pAccelOut[0],
-               pAccelOut[1],
-               pAccelOut[2]);
-        // printf("pGyroOut: %f %f %f\r\n", pGyroOut[0], pGyroOut[1], pGyroOut[2]);
+
+        char buf[20];
+        floatToString(pAccelOut[0], 6, buf);
+        printf("ax: %s\r\n", buf);
+        floatToString(pAccelOut[1], 6, buf);
+        printf("ay: %s\r\n", buf);
+        floatToString(pAccelOut[2], 6, buf);
+        printf("az: %s\r\n", buf);
+
+        floatToString(pGyroOut[0], 6, buf);
+        printf("gx: %s\r\n", buf);
+        floatToString(pGyroOut[1], 6, buf);
+        printf("gy: %s\r\n", buf);
+        floatToString(pGyroOut[2], 6, buf);
+        printf("gz: %s\r\n", buf);
+
+        floatToString(pTempOut, 2, buf);
+        printf("pTempOut: %s\r\n", buf);
+
         HAL_Delay(1000);
         /* USER CODE END WHILE */
 

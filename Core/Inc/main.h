@@ -38,7 +38,7 @@ typedef uint32_t u32;
 
 /* ANCHOR - 头文件包含 */
 
-/* C语言库相关头文件 */
+/* C 语言库相关头文件 */
 #include "stdio.h"
 #include <string.h>
 #include <stdint.h>
@@ -49,6 +49,9 @@ typedef uint32_t u32;
 #include "led.h"
 #include "oled.h"
 #include "mpu6050.h"
+
+/* 辅助文件 */
+#include "sys.h"
 
 /* USER CODE END Includes */
 

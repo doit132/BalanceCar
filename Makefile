@@ -63,7 +63,8 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
 C_SOURCES += $(wildcard Bsp/led/*.c)
 C_SOURCES += $(wildcard Bsp/oled/*.c)
 C_SOURCES += $(wildcard Bsp/mpu6050/*.c)
-C_SOURCES += $(wildcard Sys/usart/*.c)
+C_SOURCES += $(wildcard System/usart/*.c)
+C_SOURCES += $(wildcard System/sys/*.c)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -133,7 +134,8 @@ C_INCLUDES =  \
 C_INCLUDES += -IBsp/led \
 -IBsp/oled \
 -IBsp/mpu6050 \
--ISys/usart
+-ISystem/usart \
+-ISystem/sys
 
 
 # compile gcc flags
