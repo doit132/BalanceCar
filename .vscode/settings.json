@@ -6,7 +6,8 @@
     "C_Cpp.formatting": "disabled",
     "C_Cpp.errorSquiggles": "disabled",
     // "C_Cpp.intelliSenseEngine": "disabled",
-    "C_Cpp.intelliSenseEngine": "Tag Parser",
+    // Tag Parser 时没办法模糊补全, 如果到了下划线位置, 必须输入下划线才能补全   
+    "C_Cpp.intelliSenseEngine": "default",
     // ccls 插件配置
     // 开启更加详细的补全结果
     "ccls.cache.directory": ".cache/ccls",
@@ -83,4 +84,5 @@
         "**/*.lst": true,
         "**/*.ioc": true
     },
+    "cortex-debug.variableUseNaturalFormat": true,
 }

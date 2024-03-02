@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -44,7 +45,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+float pAccelOut[3];
+float pTempOut;
+float pGyroOut[3];
+float pEularAngleOut[3];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,8 +91,11 @@ int main(void)
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_USART1_UART_Init();
+    MX_I2C1_Init();
     /* USER CODE BEGIN 2 */
     OLED_Init();
+    MPU6050_Init();
+    u8 DevID;
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -98,8 +105,16 @@ int main(void)
     {
         // LED_Flash(3000);
         // HAL_UART_Transmit(&huart1, (const u8*)"hello world", 12, 100);
-        OLED_ShowString(0, 0, "hello world");
-        OLED_Refresh_Gram();
+        // OLED_ShowString(0, 0, "hello world");
+        // OLED_Refresh_Gram();
+        MPU6050_Proc();
+        MPU6050_GetResult(pAccelOut, &pTempOut, pGyroOut, pEularAngleOut);
+        printf("pAccelOut: %f %f %f\r\n",
+               pAccelOut[0],
+               pAccelOut[1],
+               pAccelOut[2]);
+        // printf("pGyroOut: %f %f %f\r\n", pGyroOut[0], pGyroOut[1], pGyroOut[2]);
+        HAL_Delay(1000);
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

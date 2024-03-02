@@ -36,6 +36,8 @@ typedef uint8_t  u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 
+/* ANCHOR - 头文件包含 */
+
 /* C语言库相关头文件 */
 #include "stdio.h"
 #include <string.h>
@@ -46,6 +48,7 @@ typedef uint32_t u32;
 /* 板级支持包相关 */
 #include "led.h"
 #include "oled.h"
+#include "mpu6050.h"
 
 /* USER CODE END Includes */
 
