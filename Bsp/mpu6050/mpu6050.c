@@ -199,7 +199,7 @@ static void MPU6050_Reset(void)
     u8 temp[2];
     temp[0] = MPU6050_RA_PWR_MGMT_1;
     temp[1] = 0x80;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
 /**
@@ -213,7 +213,7 @@ static void MPU6050_Set_SleepMode(u8 mode)
     u8 temp[2];
     temp[0] = MPU6050_RA_PWR_MGMT_1;
     temp[1] = mode << 6;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 /**
  * *****************************************************************************
@@ -234,7 +234,7 @@ static void MPU6050_Set_ClockSource(u8 source)
     u8 temp[2];
     temp[0] = MPU6050_RA_PWR_MGMT_1;
     temp[1] = source;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
 /**
@@ -253,7 +253,7 @@ static void MPU6050_Set_AccelRange(u8 range)
     u8 temp[2];
     temp[0] = MPU6050_RA_ACCEL_CONFIG;
     temp[1] = range;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
 /**
@@ -272,7 +272,7 @@ static void MPU6050_Set_GyroRange(u8 range)
     u8 temp[2];
     temp[0] = MPU6050_RA_GYRO_CONFIG;
     temp[1] = range;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
 /* ANCHOR - 公共函数定义 */
@@ -290,7 +290,7 @@ void MPU6050_Set_SampleRate(u8 rate)
     u8 temp[2];
     temp[0] = MPU6050_RA_SMPLRT_DIV;
     temp[1] = rate;
-    MPU6050_IIC_Write(DEV_ADDR, temp[0], temp[1], 1);
+    MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
 /**
