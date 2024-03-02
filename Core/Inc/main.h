@@ -45,6 +45,7 @@ typedef uint32_t u32;
 
 /* 板级支持包相关 */
 #include "led.h"
+#include "oled.h"
 
 /* USER CODE END Includes */
 
@@ -75,6 +76,14 @@ void Error_Handler(void);
 #define LED_GPIO_Port      GPIOA
 #define User_key_Pin       GPIO_PIN_5
 #define User_key_GPIO_Port GPIOA
+#define OLED_DC_Pin        GPIO_PIN_15
+#define OLED_DC_GPIO_Port  GPIOA
+#define OLED_RES_Pin       GPIO_PIN_3
+#define OLED_RES_GPIO_Port GPIOB
+#define OLED_SDA_Pin       GPIO_PIN_4
+#define OLED_SDA_GPIO_Port GPIOB
+#define OLED_SCL_Pin       GPIO_PIN_5
+#define OLED_SCL_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

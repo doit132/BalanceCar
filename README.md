@@ -24,8 +24,21 @@
 
 ctrl+shift+p 打开命令搜索窗口, 配置 C/C++ 插件, 在 .vscode 文件夹下新增 c_cpp_properties.json 文件
 
-> 使用 clangd 和 C/C++ 联合补全, 因为 clangd 对宏的补全不完美, 所以使用 C/C++ 来补全宏
+> 使用  C/C++ 补全, 因为 clangd 对宏的补全不完美, 并且对 doxygen 注释显示的很差劲
 
 # 2 编写外设驱动
 
-led 驱动, key 驱动
+led 驱动, oled 驱动, mpu6050 驱动
+
+## 2.1 oled 驱动编写
+
+驱动 IC: SSD1306, 屏幕分辨率 128*64, 通信方式: 3 线 SPI
+
+IO 资源分配: 
+
+| IO 编号 | oled 引脚名称 |
+| ------- | ------------- |
+| PA15    | DC            |
+| PB3     | RST           |
+| PB4     | SDA           |
+| PB5     | SCL           |

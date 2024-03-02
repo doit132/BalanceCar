@@ -88,6 +88,7 @@ int main(void)
     MX_GPIO_Init();
     MX_USART1_UART_Init();
     /* USER CODE BEGIN 2 */
+    OLED_Init();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -95,7 +96,10 @@ int main(void)
 
     while (1)
     {
-        LED_Flash(3000);
+        // LED_Flash(3000);
+        // HAL_UART_Transmit(&huart1, (const u8*)"hello world", 12, 100);
+        OLED_ShowString(0, 0, "hello world");
+        OLED_Refresh_Gram();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

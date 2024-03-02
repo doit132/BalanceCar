@@ -7,6 +7,13 @@
     "C_Cpp.errorSquiggles": "disabled",
     // "C_Cpp.intelliSenseEngine": "disabled",
     "C_Cpp.intelliSenseEngine": "Tag Parser",
+    // ccls 插件配置
+    // 开启更加详细的补全结果
+    "ccls.cache.directory": ".cache/ccls",
+    "ccls.completion.detailedLabel": true,
+    "ccls.launch.command": "ccls",
+    // 下面一句可以让函数加上括号, 并且可以 tab 跳转参数, 如果没有这句, 那么函数补全后就只是函数, 没有括号, 也没有参数
+    "ccls.completion.enableSnippetInsertion": true,
     // clangd 插件配置
     "clangd.detectExtensionConflicts": false,
     "clangd.arguments": [
