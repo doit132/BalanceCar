@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -92,10 +93,12 @@ int main(void)
     MX_GPIO_Init();
     MX_USART1_UART_Init();
     MX_I2C1_Init();
+    MX_TIM3_Init();
     /* USER CODE BEGIN 2 */
     OLED_Init();
     MPU6050_Init();
-    u8 DevID;
+    u32 distance;
+    HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_3);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -103,31 +106,8 @@ int main(void)
 
     while (1)
     {
-        // LED_Flash(3000);
-        // HAL_UART_Transmit(&huart1, (const u8*)"hello world", 12, 100);
-        // OLED_ShowString(0, 0, "hello world");
-        // OLED_Refresh_Gram();
-        MPU6050_Proc();
-        MPU6050_GetResult(pAccelOut, &pTempOut, pGyroOut, pEularAngleOut);
-
-        char buf[20];
-        floatToString(pAccelOut[0], 6, buf);
-        printf("ax: %s\r\n", buf);
-        floatToString(pAccelOut[1], 6, buf);
-        printf("ay: %s\r\n", buf);
-        floatToString(pAccelOut[2], 6, buf);
-        printf("az: %s\r\n", buf);
-
-        floatToString(pGyroOut[0], 6, buf);
-        printf("gx: %s\r\n", buf);
-        floatToString(pGyroOut[1], 6, buf);
-        printf("gy: %s\r\n", buf);
-        floatToString(pGyroOut[2], 6, buf);
-        printf("gz: %s\r\n", buf);
-
-        floatToString(pTempOut, 2, buf);
-        printf("pTempOut: %s\r\n", buf);
-
+        distance = Read_Distance();
+        printf("Distance: %d\r\n", distance);
         HAL_Delay(1000);
         /* USER CODE END WHILE */
 
