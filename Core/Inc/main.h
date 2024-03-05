@@ -50,6 +50,7 @@ typedef uint32_t u32;
 #include "oled.h"
 #include "mpu6050.h"
 #include "ultrasonic.h"
+#include "encoder.h"
 
 /* 辅助文件 */
 #include "sys.h"
@@ -79,6 +80,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Encoder_Left_A_Pin          GPIO_PIN_0
+#define Encoder_Left_A_GPIO_Port    GPIOA
+#define Encoder_Left_B_Pin          GPIO_PIN_1
+#define Encoder_Left_B_GPIO_Port    GPIOA
 #define LED_Pin                     GPIO_PIN_4
 #define LED_GPIO_Port               GPIOA
 #define User_key_Pin                GPIO_PIN_5
@@ -87,6 +92,18 @@ void Error_Handler(void);
 #define UltrasonicCapture_GPIO_Port GPIOB
 #define Trigger_Pin                 GPIO_PIN_1
 #define Trigger_GPIO_Port           GPIOB
+#define BIN2_Pin                    GPIO_PIN_12
+#define BIN2_GPIO_Port              GPIOB
+#define BIN1_Pin                    GPIO_PIN_13
+#define BIN1_GPIO_Port              GPIOB
+#define AIN1_Pin                    GPIO_PIN_14
+#define AIN1_GPIO_Port              GPIOB
+#define AIN2_Pin                    GPIO_PIN_15
+#define AIN2_GPIO_Port              GPIOB
+#define PWM_Right_Pin               GPIO_PIN_8
+#define PWM_Right_GPIO_Port         GPIOA
+#define PWM_Left_Pin                GPIO_PIN_11
+#define PWM_Left_GPIO_Port          GPIOA
 #define OLED_DC_Pin                 GPIO_PIN_15
 #define OLED_DC_GPIO_Port           GPIOA
 #define OLED_RES_Pin                GPIO_PIN_3

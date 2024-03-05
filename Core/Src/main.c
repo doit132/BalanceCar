@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,11 +94,13 @@ int main(void)
     MX_USART1_UART_Init();
     MX_I2C1_Init();
     MX_TIM3_Init();
+    MX_TIM2_Init();
+    MX_TIM1_Init();
+    MX_TIM4_Init();
     /* USER CODE BEGIN 2 */
     OLED_Init();
     MPU6050_Init();
-    u32 distance;
-    HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_3);
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -106,9 +108,8 @@ int main(void)
 
     while (1)
     {
-        distance = Read_Distance();
-        printf("Distance: %d\r\n", distance);
-        HAL_Delay(1000);
+        // Test_Ultrasonic();
+        Test_Encoder();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
