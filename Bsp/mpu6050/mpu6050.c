@@ -7,6 +7,10 @@ extern "C" {
 #include "mpu6050.h"
 #include "i2c.h"
 
+/* ANCHOR - 全局变量定义 */
+
+MPU6050_Data_t gMPU6050_Data;
+
 /* ANCHOR - 宏定义 */
 
 #define DEV_ADDR 0x68
@@ -150,13 +154,6 @@ extern "C" {
 #define MPU6050_GYRO_FS_1000 0x02
 #define MPU6050_GYRO_FS_2000 0x03
 
-/* ANCHOR - 私有全局变量定义 */
-
-/* 存储 MPU6050 加速度计和陀螺仪传感器的数据 */
-static float ax, ay, az, temperature, gx, gy, gz;
-/* 存储最终计算出的欧拉角 */
-static float yaw, roll, pitch;
-
 /* ANCHOR - 私有函数定义 */
 
 /**
@@ -275,6 +272,26 @@ static void MPU6050_Set_GyroRange(u8 range)
     MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
 
+/**
+ * *****************************************************************************
+ * @brief 初始化存放 MPU6050 采集数据的全局变量
+ * @param [out] pData 指向存放 MPU6050 采集的数据变量的指针
+ * *****************************************************************************
+ */
+static void Init_MPU6050_Data(MPU6050_Data_t* pData)
+{
+    pData->acc_x = 0;
+    pData->acc_y = 0;
+    pData->acc_z = 0;
+    pData->temp = 0;
+    pData->gyro_x = 0;
+    pData->gyro_y = 0;
+    pData->gyro_z = 0;
+    pData->roll = 0;
+    pData->pitch = 0;
+    pData->yaw = 0;
+}
+
 /* ANCHOR - 公共函数定义 */
 
 /**
@@ -296,9 +313,10 @@ void MPU6050_Set_SampleRate(u8 rate)
 /**
  * *****************************************************************************
  * @brief 初始化 MPU6050
+ * @param [out] pData 指向存放 MPU6050 采集的数据变量的指针
  * *****************************************************************************
  */
-void MPU6050_Init(void)
+void MPU6050_Init(MPU6050_Data_t* pData)
 {
     /* 1. 设备复位 */
     MPU6050_Reset();
@@ -314,6 +332,9 @@ void MPU6050_Init(void)
     /* 4. 设置加速度计和陀螺仪的量程 */
     MPU6050_Set_AccelRange(MPU6050_ACCEL_FS_2);
     MPU6050_Set_GyroRange(MPU6050_GYRO_FS_2000);
+
+    /* 5. 初始化存放 MPU6050 采集数据的全局变量 */
+    Init_MPU6050_Data(pData);
 }
 
 /**
@@ -350,70 +371,41 @@ u8 MPU6050_Get_DeviceID(void)
 /**
  * *****************************************************************************
  * @brief 读取 MPU6050 加速度计, 温度传感器, 陀螺仪的数据, 存放在私有全局变量中, 并计算欧拉角
+ * @param [out] pData 指向存放 MPU6050 采集的数据变量的指针
  * *****************************************************************************
  */
-void MPU6050_Proc(void)
+void MPU6050_Get_Data(MPU6050_Data_t* pData)
 {
     u8 buffer[14];
 
     MPU6050_IIC_Read(DEV_ADDR, MPU6050_RA_ACCEL_XOUT_H, buffer, 14);
 
-    ax = (int16_t)((buffer[0] << 8) | buffer[1]) / 16384.0f;
-    ay = (int16_t)((buffer[2] << 8) | buffer[3]) / 16384.0f;
-    az = (int16_t)((buffer[4] << 8) | buffer[5]) / 16384.0f;
+    pData->acc_x = (int16_t)((buffer[0] << 8) | buffer[1]) / 16384.0f;
+    pData->acc_y = (int16_t)((buffer[2] << 8) | buffer[3]) / 16384.0f;
+    pData->acc_z = (int16_t)((buffer[4] << 8) | buffer[5]) / 16384.0f;
 
-    temperature = (int16_t)((buffer[6] << 8) | buffer[7]) / 340.0f + 36.53f;
+    pData->temp = (int16_t)((buffer[6] << 8) | buffer[7]) / 340.0f + 36.53f;
 
-    gx = (int16_t)((buffer[8] << 8) | buffer[9]) / 16.4f;
-    gy = (int16_t)((buffer[10] << 10) | buffer[11]) / 16.4f;
-    gz = (int16_t)((buffer[12] << 12) | buffer[13]) / 16.4f;
+    pData->gyro_x = (int16_t)((buffer[8] << 8) | buffer[9]) / 16.4f;
+    pData->gyro_y = (int16_t)((buffer[10] << 10) | buffer[11]) / 16.4f;
+    pData->gyro_z = (int16_t)((buffer[12] << 12) | buffer[13]) / 16.4f;
 
-    float roll_a = atan2(ay, az) / 3.141593f * 180.0f;
-    float pitch_a = -atan2(ax, az) / 3.141593f * 180.0f;
+    /* 通过加速度计测量的数据计算欧拉角 */
+    float roll_a = atan2(pData->acc_y, pData->acc_z) / 3.141593f * 180.0f;
+    float pitch_a = -atan2(pData->acc_x, pData->acc_z) / 3.141593f * 180.0f;
 
-    float yaw_g = yaw + gz * 0.005;
-    float roll_g = roll + gx * 0.005;
-    float pitch_g = pitch + gy * 0.005;
+    /* 通过陀螺仪测量的数据计算欧拉角 */
+    float yaw_g = pData->yaw + pData->gyro_z * 0.005;
+    float roll_g = pData->roll + pData->gyro_z * 0.005;
+    float pitch_g = pData->pitch + pData->gyro_z * 0.005;
 
     const float alpha = 0.95238;
 
-    yaw = yaw_g;
-    roll = alpha * roll_g + (1 - alpha) * roll_a;
-    pitch = alpha * pitch_g + (1 - alpha) * pitch_a;
+    pData->yaw = yaw_g;
+    pData->roll = alpha * roll_g + (1 - alpha) * roll_a;
+    pData->pitch = alpha * pitch_g + (1 - alpha) * pitch_a;
 }
 
-/**
- * *****************************************************************************
- * @brief 从私有全局变量中获取 MPU6050 加速度计, 温度传感器, 陀螺仪的数据
- * @param [out] pAccelOut 存放加速度计数据
- * @param [out] pTempOut 存放温度传感器数据
- * @param [out] pGyroOut 存放陀螺仪数据
- * @param [out] pEularAngleOut 存放欧拉角
- * @note - 加速度计数据有 3 个
- * @note - 温度传感器数据有 1 个
- * @note - 陀螺仪数据有 3 个
- * @note - 欧拉角有 3 个
- * *****************************************************************************
- */
-void MPU6050_GetResult(float* pAccelOut,
-                       float* pTempOut,
-                       float* pGyroOut,
-                       float* pEularAngleOut)
-{
-    pAccelOut[0] = ax;
-    pAccelOut[1] = ay;
-    pAccelOut[2] = az;
-
-    *pTempOut = temperature;
-
-    pGyroOut[0] = gx;
-    pGyroOut[1] = gy;
-    pGyroOut[2] = gz;
-
-    pEularAngleOut[0] = roll;
-    pEularAngleOut[1] = pitch;
-    pEularAngleOut[2] = yaw;
-}
 #ifdef __cplusplus
 }
 #endif

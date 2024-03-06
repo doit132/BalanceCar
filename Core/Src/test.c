@@ -11,7 +11,7 @@ extern "C" {
 
 void Test_Ultrasonic(void)
 {
-    u32 distance;
+    int distance;
     HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);
     while (1)
     {
@@ -52,41 +52,45 @@ void Test_Motor(void)
 void Test_MPU6050(void)
 {
     /* 定义变量存放数据 */
-    float pAccelOut[3];
-    float pTempOut;
-    float pGyroOut[3];
-    float pEularAngleOut[3];
-    char  buf[20];
+    char           buf[16];
+    MPU6050_Data_t MPU6050_Data;
 
-    MPU6050_Init();
+    /* 初始化 MPU6050 */
+    MPU6050_Init(&MPU6050_Data);
 
     while (1)
     {
-        MPU6050_Proc();
-        MPU6050_GetResult(pAccelOut, &pTempOut, pGyroOut, pEularAngleOut);
+        MPU6050_Get_Data(&MPU6050_Data);
+
+        printf("\r\n");
+
         /* 通过串口打印输出结果, 串口重定义无法输出小数, 所以这里先将浮点数转换成字符串 */
-        floatToString(pAccelOut[0], 4, buf);
-        printf("pAccelOut[0] = %s\r\n", buf);
-        floatToString(pAccelOut[1], 4, buf);
-        printf("pAccelOut[1] = %s\r\n", buf);
-        floatToString(pAccelOut[2], 4, buf);
-        printf("pAccelOut[2] = %s\r\n", buf);
+        floatToString(MPU6050_Data.acc_x, 4, buf);
+        printf("acc_x = %s\r\n", buf);
+        floatToString(MPU6050_Data.acc_y, 4, buf);
+        printf("acc_y = %s\r\n", buf);
+        floatToString(MPU6050_Data.acc_z, 4, buf);
+        printf("acc_z = %s\r\n", buf);
 
-        floatToString(pGyroOut[0], 4, buf);
-        printf("pGyroOut[0] = %s\r\n", buf);
-        floatToString(pGyroOut[1], 4, buf);
-        printf("pGyroOut[1] = %s\r\n", buf);
-        floatToString(pGyroOut[2], 4, buf);
-        printf("pGyroOut[2] = %s\r\n", buf);
+        printf("\r\n");
 
-        floatToString(pEularAngleOut[0], 4, buf);
-        printf("pEularAngleOut[0] = %s\r\n", buf);
-        floatToString(pEularAngleOut[1], 4, buf);
-        printf("pEularAngleOut[1] = %s\r\n", buf);
-        floatToString(pEularAngleOut[2], 4, buf);
-        printf("pEularAngleOut[2] = %s\r\n", buf);
+        floatToString(MPU6050_Data.gyro_x, 4, buf);
+        printf("gyro_x = %s\r\n", buf);
+        floatToString(MPU6050_Data.gyro_y, 4, buf);
+        printf("gyro_y = %s\r\n", buf);
+        floatToString(MPU6050_Data.gyro_z, 4, buf);
+        printf("gyro_z = %s\r\n", buf);
 
-        HAL_Delay(100);
+        printf("--------------------------");
+
+        // floatToString(MPU6050_Data.pitch, 4, buf);
+        // printf("pitch = %s\r\n", buf);
+        // floatToString(MPU6050_Data.roll, 4, buf);
+        // printf("roll = %s\r\n", buf);
+        // floatToString(MPU6050_Data.yaw, 4, buf);
+        // printf("yaw = %s\r\n", buf);
+
+        HAL_Delay(2000);
     }
 }
 

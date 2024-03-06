@@ -99,7 +99,6 @@ int main(void)
     MX_TIM4_Init();
     /* USER CODE BEGIN 2 */
     OLED_Init();
-    MPU6050_Init();
 
     /* USER CODE END 2 */
 
