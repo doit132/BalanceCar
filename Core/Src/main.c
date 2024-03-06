@@ -109,7 +109,9 @@ int main(void)
     while (1)
     {
         // Test_Ultrasonic();
-        Test_Encoder();
+        // Test_Encoder();
+        // Test_Motor();
+        Test_MPU6050();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

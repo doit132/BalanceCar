@@ -13,7 +13,8 @@ extern "C" {
 
 void Test_Ultrasonic(void);
 void Test_Encoder(void);
-
+void Test_Motor(void);
+void Test_MPU6050(void);
 #ifdef __cplusplus
 }
 #endif

@@ -26,15 +26,15 @@ int Read_Encoder(u8 TIMX)
     switch (TIMX)
     {
         case 2:
-            Encoder_TIM = __HAL_TIM_GetCounter(&htim2);
+            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim2);
             __HAL_TIM_SetCounter(&htim2, 0);
             break;
         case 3:
-            Encoder_TIM = __HAL_TIM_GetCounter(&htim3);
+            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim3);
             __HAL_TIM_SetCounter(&htim3, 0);
             break;
         case 4:
-            Encoder_TIM = __HAL_TIM_GetCounter(&htim4);
+            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim4);
             __HAL_TIM_SetCounter(&htim4, 0);
             break;
         default:

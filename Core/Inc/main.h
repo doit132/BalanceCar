@@ -51,6 +51,7 @@ typedef uint32_t u32;
 #include "mpu6050.h"
 #include "ultrasonic.h"
 #include "encoder.h"
+#include "motor.h"
 
 /* 辅助文件 */
 #include "sys.h"
