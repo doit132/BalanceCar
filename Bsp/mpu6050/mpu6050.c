@@ -9,11 +9,11 @@ extern "C" {
 
 /* ANCHOR - 全局变量定义 */
 
-MPU6050_Data_t gMPU6050_Data;
-
 /* ANCHOR - 宏定义 */
 
-#define DEV_ADDR 0x68
+/* 配置项 */
+#define DEV_ADDR           0xD0
+#define MPU6050_IIC_HANDLE hi2c1
 
 /* MPU6050 寄存器地址 */
 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
@@ -166,9 +166,11 @@ MPU6050_Data_t gMPU6050_Data;
  * @return 是否成功
  * *****************************************************************************
  */
-static int8_t MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
+static HAL_StatusTypeDef
+MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
 {
-    return HAL_I2C_Mem_Write(&hi2c1, DevAddr, RegAddr, 1, data, length, 1000);
+    return HAL_I2C_Mem_Write(
+        &MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
 }
 
 /**
@@ -176,14 +178,15 @@ static int8_t MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
  * @brief MPU6050 IIC 读寄存器中的内容
  * @param [in] DevAddr MPU6050 设备地址
  * @param [in] RegAddr 要读的寄存器地址
- * @param [in] data 存放读出的数据
+ * @param [out] data 存放读出的数据
  * @param [in] length 要读出的数据长度
  * @return 是否成功
  * *****************************************************************************
  */
-static int8_t MPU6050_IIC_Read(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
+static void MPU6050_IIC_Read(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
 {
-    return HAL_I2C_Mem_Read(&hi2c1, DevAddr, RegAddr, 1, data, length, 1000);
+    HAL_I2C_Mem_Read(
+        &MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
 }
 
 /**
@@ -292,7 +295,19 @@ static void Init_MPU6050_Data(MPU6050_Data_t* pData)
     pData->yaw = 0;
 }
 
-/* ANCHOR - 公共函数定义 */
+/**
+ * *****************************************************************************
+ * @brief 获得 MPU6050 设备 ID
+ * @return 值是 0x68 或 0x69 
+ * @note - 获取 WHO_AM_I 寄存器的 Bit[6:1]
+ * *****************************************************************************
+ */
+static u8 MPU6050_Get_DeviceID(void)
+{
+    u8 data;
+    MPU6050_IIC_Read(DEV_ADDR, MPU6050_RA_WHO_AM_I, &data, 1);
+    return data;
+}
 
 /**
  * *****************************************************************************
@@ -302,13 +317,15 @@ static void Init_MPU6050_Data(MPU6050_Data_t* pData)
  * @note - 复位后陀螺仪输出频率是 8kHz, 代入计算就是 8000 / (SMPRT_DIV + 1)
  * *****************************************************************************
  */
-void MPU6050_Set_SampleRate(u8 rate)
+static void MPU6050_Set_SampleRate(u8 rate)
 {
     u8 temp[2];
     temp[0] = MPU6050_RA_SMPLRT_DIV;
     temp[1] = rate;
     MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
 }
+
+/* ANCHOR - 公共函数定义 */
 
 /**
  * *****************************************************************************
@@ -318,55 +335,28 @@ void MPU6050_Set_SampleRate(u8 rate)
  */
 void MPU6050_Init(MPU6050_Data_t* pData)
 {
-    /* 1. 设备复位 */
-    MPU6050_Reset();
-    // HAL_Delay(100);
-    delay_ms(100);
-
-    /* 2. 设置时钟源, 唤醒 MPU6050 */
-    MPU6050_Set_ClockSource(MPU6050_CLOCK_PLL_YGYRO);
-    MPU6050_Set_SleepMode(0);
-
-    /* 3. 设置采样率 1000Hz */
-    MPU6050_Set_SampleRate(7);
-
-    /* 4. 设置加速度计和陀螺仪的量程 */
-    MPU6050_Set_AccelRange(MPU6050_ACCEL_FS_2);
-    MPU6050_Set_GyroRange(MPU6050_GYRO_FS_2000);
-
-    /* 5. 初始化存放 MPU6050 采集数据的全局变量 */
-    Init_MPU6050_Data(pData);
-}
-
-/**
- * *****************************************************************************
- * @brief 检测 MPU6050 是否已经连接
- * @return 1: 已连接 0: 未连接
- * *****************************************************************************
- */
-u8 MPU6050_Check_Connect(void)
-{
-    u8 DevID;
-    DevID = MPU6050_Get_DeviceID();
-    if (DevID == 0x68)
+    u8 check;
+    check = MPU6050_Get_DeviceID();
+    if (check == 0x68)
     {
-        return 1;
-    }
-    return 0;
-}
+        /* 1. 设备复位 */
+        MPU6050_Reset();
+        HAL_Delay(100);
 
-/**
- * *****************************************************************************
- * @brief 获得 MPU6050 设备 ID
- * @return 值是 0x68 或 0x69 
- * @note - 获取 WHO_AM_I 寄存器的 Bit[6:1]
- * *****************************************************************************
- */
-u8 MPU6050_Get_DeviceID(void)
-{
-    u8 data;
-    MPU6050_IIC_Read(DEV_ADDR, MPU6050_RA_WHO_AM_I, &data, 1);
-    return data;
+        /* 2. 设置时钟源, 唤醒 MPU6050 */
+        MPU6050_Set_ClockSource(MPU6050_CLOCK_PLL_YGYRO);
+        MPU6050_Set_SleepMode(0);
+
+        /* 3. 设置采样率 1000Hz */
+        MPU6050_Set_SampleRate(7);
+
+        /* 4. 设置加速度计和陀螺仪的量程 */
+        MPU6050_Set_AccelRange(MPU6050_ACCEL_FS_2);
+        MPU6050_Set_GyroRange(MPU6050_GYRO_FS_250);
+
+        /* 5. 初始化存放 MPU6050 采集数据的全局变量 */
+        Init_MPU6050_Data(pData);
+    }
 }
 
 /**
@@ -377,19 +367,32 @@ u8 MPU6050_Get_DeviceID(void)
  */
 void MPU6050_Get_Data(MPU6050_Data_t* pData)
 {
-    u8 buffer[14];
+    int16_t Accel_X_RAW, Accel_Y_RAW, Accel_Z_RAW;
+    int16_t Temp_RAW;
+    int16_t Gyro_X_RAW, Gyro_Y_RAW, Gyro_Z_RAW;
+    u8      buffer[14];
 
     MPU6050_IIC_Read(DEV_ADDR, MPU6050_RA_ACCEL_XOUT_H, buffer, 14);
 
-    pData->acc_x = (int16_t)((buffer[0] << 8) | buffer[1]) / 16384.0f;
-    pData->acc_y = (int16_t)((buffer[2] << 8) | buffer[3]) / 16384.0f;
-    pData->acc_z = (int16_t)((buffer[4] << 8) | buffer[5]) / 16384.0f;
+    Accel_X_RAW = (int16_t)(buffer[0] << 8 | buffer[1]);
+    Accel_Y_RAW = (int16_t)(buffer[2] << 8 | buffer[3]);
+    Accel_Z_RAW = (int16_t)(buffer[4] << 8 | buffer[5]);
 
-    pData->temp = (int16_t)((buffer[6] << 8) | buffer[7]) / 340.0f + 36.53f;
+    Temp_RAW = (int16_t)(buffer[6] << 8 | buffer[7]);
 
-    pData->gyro_x = (int16_t)((buffer[8] << 8) | buffer[9]) / 16.4f;
-    pData->gyro_y = (int16_t)((buffer[10] << 10) | buffer[11]) / 16.4f;
-    pData->gyro_z = (int16_t)((buffer[12] << 12) | buffer[13]) / 16.4f;
+    Gyro_X_RAW = (int16_t)(buffer[8] << 8 | buffer[9]);
+    Gyro_Y_RAW = (int16_t)(buffer[10] << 8 | buffer[11]);
+    Gyro_Z_RAW = (int16_t)(buffer[12] << 8 | buffer[13]);
+
+    pData->acc_x = Accel_X_RAW / 16384.0f;
+    pData->acc_y = Accel_Y_RAW / 16384.0f;
+    pData->acc_z = Accel_Z_RAW / 16384.0f;
+
+    pData->temp = Temp_RAW / 340.0f + 36.53f;
+
+    pData->gyro_x = Gyro_X_RAW / 131.0;
+    pData->gyro_y = Gyro_Y_RAW / 131.0;
+    pData->gyro_z = Gyro_Z_RAW / 131.0;
 
     /* 通过加速度计测量的数据计算欧拉角 */
     float roll_a = atan2(pData->acc_y, pData->acc_z) / 3.141593f * 180.0f;
@@ -397,8 +400,8 @@ void MPU6050_Get_Data(MPU6050_Data_t* pData)
 
     /* 通过陀螺仪测量的数据计算欧拉角 */
     float yaw_g = pData->yaw + pData->gyro_z * 0.005;
-    float roll_g = pData->roll + pData->gyro_z * 0.005;
-    float pitch_g = pData->pitch + pData->gyro_z * 0.005;
+    float roll_g = pData->roll + pData->gyro_x * 0.005;
+    float pitch_g = pData->pitch + pData->gyro_y * 0.005;
 
     const float alpha = 0.95238;
 

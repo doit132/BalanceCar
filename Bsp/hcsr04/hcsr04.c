@@ -15,7 +15,7 @@ Hcsr04Info_t Hcsr04Info;
 void HCSR04_Start(void)
 {
     HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
-    delay_us(20);
+    HAL_Delay(1);
     HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
 }
 

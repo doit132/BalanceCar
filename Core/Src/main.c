@@ -98,7 +98,6 @@ int main(void)
     MX_TIM1_Init();
     MX_TIM4_Init();
     /* USER CODE BEGIN 2 */
-    delay_init();
 
     /* USER CODE END 2 */
 
@@ -110,8 +109,8 @@ int main(void)
         // Test_HCSR04();
         // Test_Encoder();
         // Test_Motor();
-        // Test_MPU6050();
-        Test_OLED();
+        Test_MPU6050();
+        // Test_OLED();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

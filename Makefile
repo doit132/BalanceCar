@@ -67,7 +67,7 @@ C_SOURCES += $(wildcard Bsp/oled/*.c)
 C_SOURCES += $(wildcard Bsp/mpu6050/*.c)
 C_SOURCES += $(wildcard System/usart/*.c)
 C_SOURCES += $(wildcard System/sys/*.c)
-C_SOURCES += $(wildcard System/delay/*.c)
+# C_SOURCES += $(wildcard System/delay/*.c)
 C_SOURCES += $(wildcard Bsp/hcsr04/*.c)
 C_SOURCES += $(wildcard Bsp/encoder/*.c)
 C_SOURCES += $(wildcard Bsp/motor/*.c)
@@ -172,7 +172,7 @@ LDSCRIPT = STM32F103C8Tx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -u _printf_float -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

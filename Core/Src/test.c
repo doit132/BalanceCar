@@ -23,7 +23,7 @@ void Test_HCSR04(void)
         HCSR04_Start();
         floatToString(dist, 2, buf);
         printf("dist =%s cm\r\n", buf);
-        delay_ms(200);
+        HAL_Delay(200);
     }
 }
 
@@ -48,8 +48,7 @@ void Test_Encoder(void)
         encoder_num_r = Read_Encoder(4);
         printf("encoder_num_l = %d\r\n", encoder_num_l);
         printf("encoder_num_r = %d\r\n", encoder_num_r);
-        // HAL_Delay(3000);
-        delay_ms(3000);
+        HAL_Delay(3000);
     }
 }
 
@@ -59,8 +58,7 @@ void Test_Motor(void)
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
     Motor_Set_Pwm(1000, 0);
-    // HAL_Delay(2000);
-    delay_ms(2000);
+    HAL_Delay(2000);
     Motor_TurnOff(3);
     while (1)
     {
@@ -70,7 +68,6 @@ void Test_Motor(void)
 void Test_MPU6050(void)
 {
     /* 定义变量存放数据 */
-    char           buf[16];
     MPU6050_Data_t MPU6050_Data;
 
     /* 初始化 MPU6050 */
@@ -80,36 +77,30 @@ void Test_MPU6050(void)
     {
         MPU6050_Get_Data(&MPU6050_Data);
 
-        printf("\r\n");
-
-        /* 通过串口打印输出结果, 串口重定义无法输出小数, 所以这里先将浮点数转换成字符串 */
-        floatToString(MPU6050_Data.acc_x, 4, buf);
-        printf("acc_x = %s\r\n", buf);
-        floatToString(MPU6050_Data.acc_y, 4, buf);
-        printf("acc_y = %s\r\n", buf);
-        floatToString(MPU6050_Data.acc_z, 4, buf);
-        printf("acc_z = %s\r\n", buf);
-
-        printf("\r\n");
-
-        floatToString(MPU6050_Data.gyro_x, 4, buf);
-        printf("gyro_x = %s\r\n", buf);
-        floatToString(MPU6050_Data.gyro_y, 4, buf);
-        printf("gyro_y = %s\r\n", buf);
-        floatToString(MPU6050_Data.gyro_z, 4, buf);
-        printf("gyro_z = %s\r\n", buf);
-
-        printf("--------------------------");
-
-        // floatToString(MPU6050_Data.pitch, 4, buf);
-        // printf("pitch = %s\r\n", buf);
-        // floatToString(MPU6050_Data.roll, 4, buf);
-        // printf("roll = %s\r\n", buf);
-        // floatToString(MPU6050_Data.yaw, 4, buf);
-        // printf("yaw = %s\r\n", buf);
-
-        // HAL_Delay(2000);
-        delay_ms(2000);
+        // printf("\r\n");
+        // /* 通过串口打印输出结果, 串口重定义无法输出小数, 所以这里先将浮点数转换成字符串 */
+        // printf("acc_x = %.2f\r\n", MPU6050_Data.acc_x);
+        // printf("acc_y = %.2f\r\n", MPU6050_Data.acc_y);
+        // printf("acc_z = %.2f\r\n", MPU6050_Data.acc_z);
+        // printf("temp = %.2f\r\n", MPU6050_Data.temp);
+        // printf("gyro_x = %.2f\r\n", MPU6050_Data.gyro_x);
+        // printf("gyro_y = %.2f\r\n", MPU6050_Data.gyro_y);
+        // printf("gyro_z = %.2f\r\n", MPU6050_Data.gyro_z);
+        // printf("yaw = %.2f\r\n", MPU6050_Data.yaw);
+        // printf("roll = %.2f\r\n", MPU6050_Data.roll);
+        // printf("pitch = %.2f\r\n", MPU6050_Data.pitch);
+        // printf("--------------------------");
+        printf("$%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f;\r\n",
+               MPU6050_Data.acc_x,
+               MPU6050_Data.acc_y,
+               MPU6050_Data.acc_z,
+               MPU6050_Data.gyro_x,
+               MPU6050_Data.gyro_y,
+               MPU6050_Data.gyro_z,
+               MPU6050_Data.yaw,
+               MPU6050_Data.roll,
+               MPU6050_Data.pitch,
+               MPU6050_Data.temp);
     }
 }
 

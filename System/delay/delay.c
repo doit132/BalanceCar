@@ -121,7 +121,7 @@ void delay_us(u32 nus)
  * SysTick->LOAD为24位寄存器,所以,最大延时为: nms<=0xffffff*8*1000/SYSCLK
  * SYSCLK 单位为 Hz, nms 单位为 ms, 对 72M 条件下, nms<=1864
  */
-void delay_ms(u16 nms)
+void delay_ms(volatile u16 nms)
 {
     u32 temp;
     SysTick->LOAD = (u32)nms * fac_ms; //时间加载 (SysTick->LOAD 为 24bit)

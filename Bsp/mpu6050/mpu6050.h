@@ -30,8 +30,6 @@ typedef struct
 } MPU6050_Data_t;
 
 /* ANCHOR - 函数声明 */
-u8   MPU6050_Get_DeviceID(void);
-u8   MPU6050_Check_Connect(void);
 void MPU6050_Init(MPU6050_Data_t* pData);
 void MPU6050_Get_Data(MPU6050_Data_t* pData);
 #ifdef __cplusplus
