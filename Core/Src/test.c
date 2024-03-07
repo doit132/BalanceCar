@@ -27,6 +27,16 @@ void Test_HCSR04(void)
     }
 }
 
+void Test_OLED(void)
+{
+    OLED_Init();
+    while (1)
+    {
+        OLED_ShowString(0, 0, "Hello, World!");
+        OLED_Refresh_Gram();
+    }
+}
+
 void Test_Encoder(void)
 {
     int encoder_num_l = 0, encoder_num_r = 0;

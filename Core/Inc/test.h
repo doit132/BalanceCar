@@ -15,6 +15,7 @@ void Test_HCSR04(void);
 void Test_Encoder(void);
 void Test_Motor(void);
 void Test_MPU6050(void);
+void Test_OLED(void);
 #ifdef __cplusplus
 }
 #endif

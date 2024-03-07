@@ -107,10 +107,11 @@ int main(void)
 
     while (1)
     {
-        Test_HCSR04();
+        // Test_HCSR04();
         // Test_Encoder();
         // Test_Motor();
         // Test_MPU6050();
+        Test_OLED();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
