@@ -11,6 +11,8 @@ extern "C" {
 
 /* ANCHOR - 宏定义 */
 
+/* ANCHOR - 结构体声明 */
+
 /* ANCHOR - 公共函数声明 */
 int Read_Encoder(u8 TIMX);
 

@@ -7,6 +7,8 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
+#include "main.h"
+
 /* ANCHOR - 公共函数声明 */
 
 void floatToString(float num, int precision, char* str);

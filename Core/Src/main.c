@@ -98,7 +98,7 @@ int main(void)
     MX_TIM1_Init();
     MX_TIM4_Init();
     /* USER CODE BEGIN 2 */
-    OLED_Init();
+    delay_init();
 
     /* USER CODE END 2 */
 
@@ -107,10 +107,10 @@ int main(void)
 
     while (1)
     {
-        // Test_Ultrasonic();
+        Test_HCSR04();
         // Test_Encoder();
         // Test_Motor();
-        Test_MPU6050();
+        // Test_MPU6050();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

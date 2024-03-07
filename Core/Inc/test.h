@@ -11,7 +11,7 @@ extern "C" {
 
 /* ANCHOR - 公共函数声明 */
 
-void Test_Ultrasonic(void);
+void Test_HCSR04(void);
 void Test_Encoder(void);
 void Test_Motor(void);
 void Test_MPU6050(void);

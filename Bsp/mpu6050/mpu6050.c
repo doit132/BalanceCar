@@ -320,7 +320,8 @@ void MPU6050_Init(MPU6050_Data_t* pData)
 {
     /* 1. 设备复位 */
     MPU6050_Reset();
-    HAL_Delay(100);
+    // HAL_Delay(100);
+    delay_ms(100);
 
     /* 2. 设置时钟源, 唤醒 MPU6050 */
     MPU6050_Set_ClockSource(MPU6050_CLOCK_PLL_YGYRO);

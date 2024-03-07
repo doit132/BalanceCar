@@ -49,12 +49,13 @@ typedef uint32_t u32;
 #include "led.h"
 #include "oled.h"
 #include "mpu6050.h"
-#include "ultrasonic.h"
+#include "hcsr04.h"
 #include "encoder.h"
 #include "motor.h"
 
 /* 辅助文件 */
 #include "sys.h"
+#include "delay.h"
 
 /* USER CODE END Includes */
 
@@ -81,38 +82,38 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Encoder_Left_A_Pin          GPIO_PIN_0
-#define Encoder_Left_A_GPIO_Port    GPIOA
-#define Encoder_Left_B_Pin          GPIO_PIN_1
-#define Encoder_Left_B_GPIO_Port    GPIOA
-#define LED_Pin                     GPIO_PIN_4
-#define LED_GPIO_Port               GPIOA
-#define User_key_Pin                GPIO_PIN_5
-#define User_key_GPIO_Port          GPIOA
-#define UltrasonicCapture_Pin       GPIO_PIN_0
-#define UltrasonicCapture_GPIO_Port GPIOB
-#define Trigger_Pin                 GPIO_PIN_1
-#define Trigger_GPIO_Port           GPIOB
-#define BIN2_Pin                    GPIO_PIN_12
-#define BIN2_GPIO_Port              GPIOB
-#define BIN1_Pin                    GPIO_PIN_13
-#define BIN1_GPIO_Port              GPIOB
-#define AIN1_Pin                    GPIO_PIN_14
-#define AIN1_GPIO_Port              GPIOB
-#define AIN2_Pin                    GPIO_PIN_15
-#define AIN2_GPIO_Port              GPIOB
-#define PWM_Right_Pin               GPIO_PIN_8
-#define PWM_Right_GPIO_Port         GPIOA
-#define PWM_Left_Pin                GPIO_PIN_11
-#define PWM_Left_GPIO_Port          GPIOA
-#define OLED_DC_Pin                 GPIO_PIN_15
-#define OLED_DC_GPIO_Port           GPIOA
-#define OLED_RES_Pin                GPIO_PIN_3
-#define OLED_RES_GPIO_Port          GPIOB
-#define OLED_SDA_Pin                GPIO_PIN_4
-#define OLED_SDA_GPIO_Port          GPIOB
-#define OLED_SCL_Pin                GPIO_PIN_5
-#define OLED_SCL_GPIO_Port          GPIOB
+#define Encoder_Left_A_Pin       GPIO_PIN_0
+#define Encoder_Left_A_GPIO_Port GPIOA
+#define Encoder_Left_B_Pin       GPIO_PIN_1
+#define Encoder_Left_B_GPIO_Port GPIOA
+#define LED_Pin                  GPIO_PIN_4
+#define LED_GPIO_Port            GPIOA
+#define User_key_Pin             GPIO_PIN_5
+#define User_key_GPIO_Port       GPIOA
+#define HCSR04_ECHO_Pin          GPIO_PIN_0
+#define HCSR04_ECHO_GPIO_Port    GPIOB
+#define TRIG_Pin                 GPIO_PIN_1
+#define TRIG_GPIO_Port           GPIOB
+#define BIN2_Pin                 GPIO_PIN_12
+#define BIN2_GPIO_Port           GPIOB
+#define BIN1_Pin                 GPIO_PIN_13
+#define BIN1_GPIO_Port           GPIOB
+#define AIN1_Pin                 GPIO_PIN_14
+#define AIN1_GPIO_Port           GPIOB
+#define AIN2_Pin                 GPIO_PIN_15
+#define AIN2_GPIO_Port           GPIOB
+#define PWM_Right_Pin            GPIO_PIN_8
+#define PWM_Right_GPIO_Port      GPIOA
+#define PWM_Left_Pin             GPIO_PIN_11
+#define PWM_Left_GPIO_Port       GPIOA
+#define OLED_DC_Pin              GPIO_PIN_15
+#define OLED_DC_GPIO_Port        GPIOA
+#define OLED_RES_Pin             GPIO_PIN_3
+#define OLED_RES_GPIO_Port       GPIOB
+#define OLED_SDA_Pin             GPIO_PIN_4
+#define OLED_SDA_GPIO_Port       GPIOB
+#define OLED_SCL_Pin             GPIO_PIN_5
+#define OLED_SCL_GPIO_Port       GPIOB
 
 /* USER CODE BEGIN Private defines */
 

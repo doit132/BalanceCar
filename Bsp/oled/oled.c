@@ -260,7 +260,8 @@ void OLED_ShowString(u8 x, u8 y, const char* p)
 void OLED_Init(void)
 {
     OLED_RST_Clr();
-    HAL_Delay(100);
+    // HAL_Delay(100);
+    delay_ms(100);
     OLED_RST_Set();
 
     OLED_WR_Byte(0xAE, OLED_CMD); //关闭显示

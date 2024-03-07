@@ -7,17 +7,23 @@ extern "C" {
 #include "test.h"
 #include "tim.h"
 
+/* ANCHOR - 全局变量定义 */
+
 /* ANCHOR - 公共函数定义 */
 
-void Test_Ultrasonic(void)
+void Test_HCSR04(void)
 {
-    int distance;
-    HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);
+    float dist;
+    char  buf[20];
+    HCSR04_Init(&htim3, TIM_CHANNEL_3);
+    HCSR04_Start();
     while (1)
     {
-        distance = Read_Distance();
-        printf("distance = %d\r\n", distance);
-        HAL_Delay(100);
+        dist = Hcsr04_Read();
+        HCSR04_Start();
+        floatToString(dist, 2, buf);
+        printf("dist =%s cm\r\n", buf);
+        delay_ms(200);
     }
 }
 
@@ -32,7 +38,8 @@ void Test_Encoder(void)
         encoder_num_r = Read_Encoder(4);
         printf("encoder_num_l = %d\r\n", encoder_num_l);
         printf("encoder_num_r = %d\r\n", encoder_num_r);
-        HAL_Delay(3000);
+        // HAL_Delay(3000);
+        delay_ms(3000);
     }
 }
 
@@ -42,7 +49,8 @@ void Test_Motor(void)
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
     Motor_Set_Pwm(1000, 0);
-    HAL_Delay(2000);
+    // HAL_Delay(2000);
+    delay_ms(2000);
     Motor_TurnOff(3);
     while (1)
     {
@@ -90,7 +98,8 @@ void Test_MPU6050(void)
         // floatToString(MPU6050_Data.yaw, 4, buf);
         // printf("yaw = %s\r\n", buf);
 
-        HAL_Delay(2000);
+        // HAL_Delay(2000);
+        delay_ms(2000);
     }
 }
 

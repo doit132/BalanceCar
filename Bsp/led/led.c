@@ -17,7 +17,8 @@ extern "C" {
 void LED_Flash(u32 time)
 {
     LED_Toggle();
-    HAL_Delay(time);
+    // HAL_Delay(time);
+    delay_ms(time);
 }
 
 #ifdef __cplusplus

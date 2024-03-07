@@ -263,10 +263,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
         /**TIM3 GPIO Configuration
     PB0     ------> TIM3_CH3
     */
-        GPIO_InitStruct.Pin = UltrasonicCapture_Pin;
+        GPIO_InitStruct.Pin = HCSR04_ECHO_Pin;
         GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
-        HAL_GPIO_Init(UltrasonicCapture_GPIO_Port, &GPIO_InitStruct);
+        HAL_GPIO_Init(HCSR04_ECHO_GPIO_Port, &GPIO_InitStruct);
 
         /* TIM3 interrupt Init */
         HAL_NVIC_SetPriority(TIM3_IRQn, 1, 0);
@@ -374,7 +374,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
         /**TIM3 GPIO Configuration
     PB0     ------> TIM3_CH3
     */
-        HAL_GPIO_DeInit(UltrasonicCapture_GPIO_Port, UltrasonicCapture_Pin);
+        HAL_GPIO_DeInit(HCSR04_ECHO_GPIO_Port, HCSR04_ECHO_Pin);
 
         /* TIM3 interrupt Deinit */
         HAL_NVIC_DisableIRQ(TIM3_IRQn);
