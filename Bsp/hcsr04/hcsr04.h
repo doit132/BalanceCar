@@ -13,7 +13,7 @@ extern "C" {
 
 typedef struct
 {
-    uint8_t               edge_state; /* 记录上升沿和下降沿状态 */
+    uint8_t               edge_state;           /* 记录上升沿和下降沿状态 */
     uint16_t              tim_overflow_counter; /* 定时器溢出次数 */
     float                 distance;             /* 测量距离 */
     uint32_t              prescaler;

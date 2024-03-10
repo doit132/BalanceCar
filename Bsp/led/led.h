@@ -7,6 +7,7 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
+#include "sys.h"
 #include "main.h"
 
 /* ANCHOR - 宏定义 */

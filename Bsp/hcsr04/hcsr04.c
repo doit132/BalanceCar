@@ -78,36 +78,29 @@ void Hcsr04_TIM_Overflow_ISR(TIM_HandleTypeDef* htim)
  */
 void Hcsr04_TIM_IC_ISR(TIM_HandleTypeDef* htim)
 {
-    if ((htim->Instance == Hcsr04Info.instance) &&
-        (htim->Channel == Hcsr04Info.active_channel))
+    if ((htim->Instance == Hcsr04Info.instance) && (htim->Channel == Hcsr04Info.active_channel))
     {
         if (Hcsr04Info.edge_state == 0) //  捕获上升沿
         {
             // 得到上升沿时, t1 = 计数器的值, 并更改输入捕获为下降沿
-            Hcsr04Info.t1 =
-                HAL_TIM_ReadCapturedValue(htim, Hcsr04Info.ic_tim_ch);
-            __HAL_TIM_SET_CAPTUREPOLARITY(
-                htim, Hcsr04Info.ic_tim_ch, TIM_INPUTCHANNELPOLARITY_FALLING);
+            Hcsr04Info.t1 = HAL_TIM_ReadCapturedValue(htim, Hcsr04Info.ic_tim_ch);
+            __HAL_TIM_SET_CAPTUREPOLARITY(htim, Hcsr04Info.ic_tim_ch, TIM_INPUTCHANNELPOLARITY_FALLING);
             Hcsr04Info.tim_overflow_counter = 0; // 定时器溢出计数器清零
-            Hcsr04Info.edge_state = 1; // 上升沿, 下降沿捕获标志位
+            Hcsr04Info.edge_state = 1;           // 上升沿, 下降沿捕获标志位
         }
         else if (Hcsr04Info.edge_state == 1) // 捕获下降沿
         {
             // 捕获下降沿时, 计数器的值
-            Hcsr04Info.t2 =
-                HAL_TIM_ReadCapturedValue(htim, Hcsr04Info.ic_tim_ch);
+            Hcsr04Info.t2 = HAL_TIM_ReadCapturedValue(htim, Hcsr04Info.ic_tim_ch);
             // 需要考虑定时器溢出中断
-            Hcsr04Info.t2 +=
-                Hcsr04Info.tim_overflow_counter * Hcsr04Info.period;
+            Hcsr04Info.t2 += Hcsr04Info.tim_overflow_counter * Hcsr04Info.period;
             // 高电平持续时间 = 下降沿时间点 - 上升沿时间点
             Hcsr04Info.high_level_us = Hcsr04Info.t2 - Hcsr04Info.t1;
             // 计算距离
-            Hcsr04Info.distance =
-                (Hcsr04Info.high_level_us / 1000000.0) * 340.0 / 2.0 * 100.0;
+            Hcsr04Info.distance = (Hcsr04Info.high_level_us / 1000000.0) * 340.0 / 2.0 * 100.0;
             // 重新开启上升沿捕获
             Hcsr04Info.edge_state = 0; // 一次采集完毕, 清零
-            __HAL_TIM_SET_CAPTUREPOLARITY(
-                htim, Hcsr04Info.ic_tim_ch, TIM_INPUTCHANNELPOLARITY_RISING);
+            __HAL_TIM_SET_CAPTUREPOLARITY(htim, Hcsr04Info.ic_tim_ch, TIM_INPUTCHANNELPOLARITY_RISING);
         }
     }
 }

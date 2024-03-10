@@ -4,8 +4,8 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
-#include "encoder.h"
 #include "tim.h"
+#include "encoder.h"
 
 /* ANCHOR - 公共函数定义 */
 
@@ -41,6 +41,26 @@ int Read_Encoder(u8 TIMX)
             Encoder_TIM = 0;
     }
     return Encoder_TIM;
+}
+
+void Encoder_Init(Encoder_Data_t* pData)
+{
+    pData->encoder_count_l = 0;
+    pData->encoder_count_r = 0;
+    HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+    HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+}
+
+/**
+ * *****************************************************************************
+ * @brief 获取编码器数据
+ * @param [out] pData 指向存储编码器数据的结构体
+ * *****************************************************************************
+ */
+void Encoder_Get_Data(Encoder_Data_t* pData)
+{
+    pData->encoder_count_l = Read_Encoder(2);
+    pData->encoder_count_r = Read_Encoder(4);
 }
 
 #ifdef __cplusplus

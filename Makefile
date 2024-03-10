@@ -63,6 +63,7 @@ Core/Src/tim.c
 # TODO 源文件添加
 C_SOURCES += $(wildcard Core/Src/*.c)
 C_SOURCES += $(wildcard Bsp/led/*.c)
+C_SOURCES += $(wildcard Bsp/key/*.c)
 C_SOURCES += $(wildcard Bsp/oled/*.c)
 C_SOURCES += $(wildcard Bsp/mpu6050/*.c)
 C_SOURCES += $(wildcard System/usart/*.c)
@@ -71,6 +72,7 @@ C_SOURCES += $(wildcard System/sys/*.c)
 C_SOURCES += $(wildcard Bsp/hcsr04/*.c)
 C_SOURCES += $(wildcard Bsp/encoder/*.c)
 C_SOURCES += $(wildcard Bsp/motor/*.c)
+C_SOURCES += $(wildcard User/*.c)
 C_SOURCES := $(sort $(C_SOURCES))
 
 # ASM sources
@@ -146,7 +148,9 @@ C_INCLUDES += -IBsp/led \
 -IBsp/hcsr04 \
 -IBsp/encoder \
 -IBsp/motor \
--ISystem/delay
+-ISystem/delay \
+-IUser \
+-IBsp/key
 
 
 # compile gcc flags

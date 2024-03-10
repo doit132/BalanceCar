@@ -7,7 +7,13 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
-#include "main.h"
+// #include "main.h"
+
+/* ANCHOR - typedef */
+
+typedef unsigned int   u32; // u32
+typedef unsigned char  u8;  // u8
+typedef unsigned short u16; // u16
 
 /* ANCHOR - 公共函数声明 */
 

@@ -166,11 +166,9 @@ extern "C" {
  * @return 是否成功
  * *****************************************************************************
  */
-static HAL_StatusTypeDef
-MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
+static HAL_StatusTypeDef MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
 {
-    return HAL_I2C_Mem_Write(
-        &MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
+    return HAL_I2C_Mem_Write(&MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
 }
 
 /**
@@ -185,8 +183,7 @@ MPU6050_IIC_Write(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
  */
 static void MPU6050_IIC_Read(u8 DevAddr, u8 RegAddr, u8* data, u8 length)
 {
-    HAL_I2C_Mem_Read(
-        &MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
+    HAL_I2C_Mem_Read(&MPU6050_IIC_HANDLE, DevAddr, RegAddr, 1, data, length, 1000);
 }
 
 /**

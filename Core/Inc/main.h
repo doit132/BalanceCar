@@ -31,10 +31,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-/* 简化变量的定义 */
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
 
 /* ANCHOR - 头文件包含 */
 
@@ -52,6 +48,7 @@ typedef uint32_t u32;
 #include "hcsr04.h"
 #include "encoder.h"
 #include "motor.h"
+#include "key.h"
 
 /* 辅助文件 */
 #include "sys.h"

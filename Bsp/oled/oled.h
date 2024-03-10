@@ -6,30 +6,23 @@ extern "C" {
 #endif
 
 /* ANCHOR - 头文件包含 */
+#include "sys.h"
 #include "main.h"
 
 /* ANCHOR - 宏定义 */
 /* OLED IO 口操作宏定义 */
 /* RST 引脚置位和复位 */
-#define OLED_RST_Clr()                                                         \
-    HAL_GPIO_WritePin(OLED_RES_GPIO_Port, OLED_RES_Pin, GPIO_PIN_RESET); //RST
-#define OLED_RST_Set()                                                         \
-    HAL_GPIO_WritePin(OLED_RES_GPIO_Port, OLED_RES_Pin, GPIO_PIN_SET); //RST
+#define OLED_RST_Clr() HAL_GPIO_WritePin(OLED_RES_GPIO_Port, OLED_RES_Pin, GPIO_PIN_RESET); //RST
+#define OLED_RST_Set() HAL_GPIO_WritePin(OLED_RES_GPIO_Port, OLED_RES_Pin, GPIO_PIN_SET);   //RST
 /* DC 引脚置位和复位 */
-#define OLED_DC_Clr()                                                          \
-    HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_RESET); //DC
-#define OLED_DC_Set()                                                          \
-    HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET); //DC
+#define OLED_DC_Clr() HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_RESET); //DC
+#define OLED_DC_Set() HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);   //DC
 /* SCLK 引脚置位和复位 */
-#define OLED_SCLK_Clr()                                                        \
-    HAL_GPIO_WritePin(OLED_SCL_GPIO_Port, OLED_SCL_Pin, GPIO_PIN_RESET); //SCL
-#define OLED_SCLK_Set()                                                        \
-    HAL_GPIO_WritePin(OLED_SCL_GPIO_Port, OLED_SCL_Pin, GPIO_PIN_SET); //SCL
+#define OLED_SCLK_Clr() HAL_GPIO_WritePin(OLED_SCL_GPIO_Port, OLED_SCL_Pin, GPIO_PIN_RESET); //SCL
+#define OLED_SCLK_Set() HAL_GPIO_WritePin(OLED_SCL_GPIO_Port, OLED_SCL_Pin, GPIO_PIN_SET);   //SCL
 /* SDA 引脚置位和复位 */
-#define OLED_SDA_Clr()                                                         \
-    HAL_GPIO_WritePin(OLED_SDA_GPIO_Port, OLED_SDA_Pin, GPIO_PIN_RESET); //SDA
-#define OLED_SDA_Set()                                                         \
-    HAL_GPIO_WritePin(OLED_SDA_GPIO_Port, OLED_SDA_Pin, GPIO_PIN_SET); //SDA
+#define OLED_SDA_Clr() HAL_GPIO_WritePin(OLED_SDA_GPIO_Port, OLED_SDA_Pin, GPIO_PIN_RESET); //SDA
+#define OLED_SDA_Set() HAL_GPIO_WritePin(OLED_SDA_GPIO_Port, OLED_SDA_Pin, GPIO_PIN_SET);   //SDA
 
 /* 表示写入是命令还是数据的标志 */
 #define OLED_CMD  0 /* 写命令 */
