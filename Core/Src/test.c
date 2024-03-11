@@ -159,6 +159,34 @@ void Test_Main(void)
     }
 }
 
+void Test_SoftTimer(void)
+{
+    /* 定义变量存放数据 */
+    Encoder_Data_t Encoder_Data;
+
+    SoftTimer_Init();
+    Encoder_Init(&Encoder_Data);
+
+    // SoftTimer_Start(1, 1000, SOFT_TIMER_MODE_ONCE);
+    SoftTimer_Start(1, 1000, SOFT_TIMER_MODE_ONCE, "串口");
+    SoftTimer_Start(2, 1000, SOFT_TIMER_MODE_PERIODIC, "Encoder");
+    while (1)
+    {
+        if (SoftTimer_Check(1))
+        {
+            // printf("timer 1 done\r\n");
+        }
+        if (SoftTimer_Check(2))
+        {
+            Encoder_Get_Data(&Encoder_Data);
+            printf("--------------------------\r\n");
+            printf("encoder_count_l = %d\r\n", Encoder_Data.encoder_count_l);
+            printf("encoder_count_r = %d\r\n", Encoder_Data.encoder_count_r);
+            printf("--------------------------\r\n");
+        }
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -112,7 +112,7 @@ int main(void)
         // Test_MPU6050();
         // Test_OLED();
         // Test_Main();
-
+        Test_SoftTimer();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

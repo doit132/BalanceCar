@@ -53,6 +53,7 @@ extern "C" {
 /* 辅助文件 */
 #include "sys.h"
 #include "delay.h"
+#include "soft_timer.h"
 
 /* USER CODE END Includes */
 
