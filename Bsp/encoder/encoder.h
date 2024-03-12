@@ -7,7 +7,7 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
-#include "sys.h"
+#include "main.h"
 
 /* ANCHOR - 宏定义 */
 
@@ -23,7 +23,7 @@ typedef struct Encoder_Data
 int  Read_Encoder(u8 TIMX);
 void Encoder_Get_Data(Encoder_Data_t* pData);
 void Encoder_Init(Encoder_Data_t* pData);
-
+void Encoder_Change_Mode(Encoder_Data_t* pData);
 #ifdef __cplusplus
 }
 #endif

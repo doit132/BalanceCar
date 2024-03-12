@@ -67,10 +67,11 @@ extern "C" {
 #define MPU6050_RA_I2C_SLV4_CTRL  0x34
 #define MPU6050_RA_I2C_SLV4_DI    0x35
 #define MPU6050_RA_I2C_MST_STATUS 0x36
-#define MPU6050_RA_INT_PIN_CFG    0x37
-#define MPU6050_RA_INT_ENABLE     0x38
+#define MPU6050_RA_INT_PIN_CFG    0x37 /* 中断/旁路设置寄存器 */
+#define MPU6050_RA_INT_ENABLE     0x38 /* 中断使能寄存器 */
 #define MPU6050_RA_DMP_INT_STATUS 0x39
 #define MPU6050_RA_INT_STATUS     0x3A
+
 /* 存储最近的 X 轴, Y 轴, Z 轴加速度感应器的测量值 */
 #define MPU6050_RA_ACCEL_XOUT_H 0x3B
 #define MPU6050_RA_ACCEL_XOUT_L 0x3C
@@ -82,12 +83,13 @@ extern "C" {
 #define MPU6050_RA_TEMP_OUT_H 0x41
 #define MPU6050_RA_TEMP_OUT_L 0x42
 /* 存储最近的 X 轴, Y 轴, Z 轴陀螺仪感应器的测量值 */
-#define MPU6050_RA_GYRO_XOUT_H        0x43
-#define MPU6050_RA_GYRO_XOUT_L        0x44
-#define MPU6050_RA_GYRO_YOUT_H        0x45
-#define MPU6050_RA_GYRO_YOUT_L        0x46
-#define MPU6050_RA_GYRO_ZOUT_H        0x47
-#define MPU6050_RA_GYRO_ZOUT_L        0x48
+#define MPU6050_RA_GYRO_XOUT_H 0x43
+#define MPU6050_RA_GYRO_XOUT_L 0x44
+#define MPU6050_RA_GYRO_YOUT_H 0x45
+#define MPU6050_RA_GYRO_YOUT_L 0x46
+#define MPU6050_RA_GYRO_ZOUT_H 0x47
+#define MPU6050_RA_GYRO_ZOUT_L 0x48
+
 #define MPU6050_RA_EXT_SENS_DATA_00   0x49
 #define MPU6050_RA_EXT_SENS_DATA_01   0x4A
 #define MPU6050_RA_EXT_SENS_DATA_02   0x4B
@@ -197,6 +199,25 @@ static void MPU6050_Reset(void)
     temp[0] = MPU6050_RA_PWR_MGMT_1;
     temp[1] = 0x80;
     MPU6050_IIC_Write(DEV_ADDR, temp[0], &temp[1], 1);
+}
+
+/**
+ * *****************************************************************************
+ * @brief 配置中断
+ * *****************************************************************************
+ */
+static void MPU6050_Config_Int(void)
+{
+    u8 cmd;
+    /* 开启 FIFO 中断 */
+    cmd = 0x1;
+    MPU6050_IIC_Write(DEV_ADDR, MPU6050_RA_INT_ENABLE, &cmd, 1);
+
+    /* 配置电平触发方式 */
+    cmd = 0x80;
+    MPU6050_IIC_Write(DEV_ADDR, MPU6050_RA_INT_PIN_CFG, &cmd, 1); /* 低电平触发, 所以 STM32 GPIO设置为上拉 */
+    // cmd = 0x9c;
+    // MPU6050_IIC_Write(DEV_ADDR, MPU6050_RA_INT_ENABLE, &cmd, 1); /* 高电平触发 */
 }
 
 /**
@@ -353,6 +374,9 @@ void MPU6050_Init(MPU6050_Data_t* pData)
 
         /* 5. 初始化存放 MPU6050 采集数据的全局变量 */
         Init_MPU6050_Data(pData);
+
+        /* 6. 中断配置 */
+        MPU6050_Config_Int();
     }
 }
 
@@ -392,8 +416,8 @@ void MPU6050_Get_Data(MPU6050_Data_t* pData)
     pData->gyro_z = Gyro_Z_RAW / 131.0;
 
     /* 通过加速度计测量的数据计算欧拉角 */
-    float roll_a = atan2(pData->acc_y, pData->acc_z) / 3.141593f * 180.0f;
-    float pitch_a = -atan2(pData->acc_x, pData->acc_z) / 3.141593f * 180.0f;
+    float pitch_a = -atan2(pData->acc_y, pData->acc_z) / 3.141593f * 180.0f;
+    float roll_a = atan2(pData->acc_x, pData->acc_z) / 3.141593f * 180.0f;
 
     /* 通过陀螺仪测量的数据计算欧拉角 */
     float yaw_g = pData->yaw + pData->gyro_z * 0.005;

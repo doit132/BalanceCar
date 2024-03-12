@@ -32,6 +32,7 @@ typedef struct
 /* ANCHOR - 函数声明 */
 void MPU6050_Init(MPU6050_Data_t* pData);
 void MPU6050_Get_Data(MPU6050_Data_t* pData);
+
 #ifdef __cplusplus
 }
 #endif

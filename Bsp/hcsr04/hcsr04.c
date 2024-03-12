@@ -8,14 +8,22 @@ extern "C" {
 
 /* ANCHOR - 全局变量定义 */
 
-Hcsr04Info_t Hcsr04Info;
+extern Hcsr04Info_t Hcsr04Info;
 
 /* ANCHOR - 公共函数定义 */
 
 void HCSR04_Start(void)
 {
+    volatile u32 cnt = 0;
     HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1);
+    while (1)
+    {
+        cnt++;
+        if (cnt > 50000)
+        {
+            break;
+        }
+    }
     HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
 }
 
@@ -26,7 +34,7 @@ void HCSR04_Init(TIM_HandleTypeDef* htim, uint32_t Channel)
     Hcsr04Info.prescaler = htim->Init.Prescaler; /* 72-1 */
     Hcsr04Info.edge_state = 0;
     Hcsr04Info.tim_overflow_counter = 0;
-    Hcsr04Info.distance = 0;
+    Hcsr04Info.distance = 0.0f;
     Hcsr04Info.instance = htim->Instance; /* TIM3 */
     Hcsr04Info.ic_tim_ch = Channel;       /* Channel3 */
 
@@ -54,6 +62,22 @@ void HCSR04_Init(TIM_HandleTypeDef* htim, uint32_t Channel)
     /* 开启定时器更新中断和捕获中断 */
     HAL_TIM_Base_Start_IT(htim);
     HAL_TIM_IC_Start_IT(htim, Channel);
+}
+
+/**
+ * *****************************************************************************
+ * @brief 读取超声波模块测量的距离
+ * @return 
+ * *****************************************************************************
+ */
+float Hcsr04_Read(void)
+{
+    // 测距结果限幅
+    if (Hcsr04Info.distance >= 450)
+    {
+        Hcsr04Info.distance = 450;
+    }
+    return Hcsr04Info.distance;
 }
 
 /**
@@ -103,32 +127,6 @@ void Hcsr04_TIM_IC_ISR(TIM_HandleTypeDef* htim)
             __HAL_TIM_SET_CAPTUREPOLARITY(htim, Hcsr04Info.ic_tim_ch, TIM_INPUTCHANNELPOLARITY_RISING);
         }
     }
-}
-
-/**
- * *****************************************************************************
- * @brief 读取超声波模块测量的距离
- * @return 
- * *****************************************************************************
- */
-float Hcsr04_Read()
-{
-    // 测距结果限幅
-    if (Hcsr04Info.distance >= 450)
-    {
-        Hcsr04Info.distance = 450;
-    }
-    return Hcsr04Info.distance;
-}
-
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim)
-{
-    Hcsr04_TIM_IC_ISR(htim);
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
-{
-    Hcsr04_TIM_Overflow_ISR(htim);
 }
 
 #ifdef __cplusplus

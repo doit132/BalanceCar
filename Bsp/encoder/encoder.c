@@ -6,6 +6,7 @@ extern "C" {
 
 #include "tim.h"
 #include "encoder.h"
+#include "sys.h"
 
 /* ANCHOR - 公共函数定义 */
 
@@ -22,19 +23,22 @@ extern "C" {
  */
 int Read_Encoder(u8 TIMX)
 {
+    /* 检查 TIMX 的取值 */
+    assert(TIMX == 2 || TIMX == 3 || TIMX == 4);
+
     int Encoder_TIM;
     switch (TIMX)
     {
         case 2:
-            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim2);
+            Encoder_TIM = -(short)__HAL_TIM_GetCounter(&htim2);
             __HAL_TIM_SetCounter(&htim2, 0);
             break;
         case 3:
-            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim3);
+            Encoder_TIM = -(short)__HAL_TIM_GetCounter(&htim3);
             __HAL_TIM_SetCounter(&htim3, 0);
             break;
         case 4:
-            Encoder_TIM = (short)__HAL_TIM_GetCounter(&htim4);
+            Encoder_TIM = -(short)__HAL_TIM_GetCounter(&htim4);
             __HAL_TIM_SetCounter(&htim4, 0);
             break;
         default:
@@ -45,6 +49,9 @@ int Read_Encoder(u8 TIMX)
 
 void Encoder_Init(Encoder_Data_t* pData)
 {
+    /* 防御式编程, 检查指针是否为空 */
+    assert(pData != NULL);
+
     pData->encoder_count_l = 0;
     pData->encoder_count_r = 0;
     HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1 | TIM_CHANNEL_2);
@@ -59,8 +66,45 @@ void Encoder_Init(Encoder_Data_t* pData)
  */
 void Encoder_Get_Data(Encoder_Data_t* pData)
 {
+    /* 防御式编程, 检查指针是否为空 */
+    assert(pData != NULL);
+
     pData->encoder_count_l = Read_Encoder(2);
     pData->encoder_count_r = Read_Encoder(4);
+}
+
+/**
+ * *****************************************************************************
+ * @brief 选中小车右轮, 改变小车的运动模式
+ * @param [in] pData 指向存储编码器数据的结构体
+ * *****************************************************************************
+ */
+void Encoder_Change_Mode(Encoder_Data_t* pData)
+{
+    static int count;
+    if (Flag_Stop == 0)
+        count = 0;
+    if ((Flag_Stop == 1) && (pData->encoder_count_l < 10)) /* 此时停止且左轮不动 */
+    {
+        count += abs(pData->encoder_count_l);
+        if (count > 6 && count < 180) /* 普通模式 */
+        {
+            Flag_follow = 0;
+            Flag_avoid = 0;
+        }
+        if (count > 180 && count < 360) /* 避障模式 */
+        {
+            Flag_avoid = 1;
+            Flag_follow = 0;
+        }
+        if (count > 360 && count < 540) /* 跟随模式 */
+        {
+            Flag_avoid = 0;
+            Flag_follow = 1;
+        }
+        if (count > 540)
+            count = 0;
+    }
 }
 
 #ifdef __cplusplus

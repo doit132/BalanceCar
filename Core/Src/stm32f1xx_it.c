@@ -22,6 +22,9 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "hcsr04.h"
+#include "soft_timer.h"
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -188,7 +191,7 @@ void SysTick_Handler(void)
     HAL_IncTick();
     /* USER CODE BEGIN SysTick_IRQn 1 */
     SysTick_ISR(); /* 滴答定时中断服务程序 */
-    /* USER CODE END SysTick_IRQn 1 */
+                   /* USER CODE END SysTick_IRQn 1 */
 }
 
 /******************************************************************************/
@@ -212,6 +215,45 @@ void TIM3_IRQHandler(void)
     /* USER CODE END TIM3_IRQn 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI15_10_IRQHandler(void)
+{
+    /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+    if (INT == 0)
+    {
+        if (delay_flag == 1)
+        {
+            delay_50++;
+            if (delay_50 == 10) /* 给主函数提供 50ms 的精准延时, 示波器需要 50ms 高精度延时 */
+            {
+                delay_50 = 0;
+                delay_flag = 0;
+            }
+        }
+    }
 
+    /* USER CODE END EXTI15_10_IRQn 0 */
+    HAL_GPIO_EXTI_IRQHandler(MPU6050_INT_Pin);
+    /* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+    /* USER CODE END EXTI15_10_IRQn 1 */
+}
+
+/* USER CODE BEGIN 1 */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim)
+{
+    Hcsr04_TIM_IC_ISR(htim);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+    Hcsr04_TIM_Overflow_ISR(htim);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    MPU6050_DRDY_ISR(GPIO_Pin);
+}
 /* USER CODE END 1 */

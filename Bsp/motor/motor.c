@@ -83,6 +83,9 @@ static void Motor_Set_Direction(u8 motor, u8 direction)
  */
 void Motor_TurnOff(u8 motor)
 {
+    /* ANCHOR - 防御式编程, 参数校验 */
+    assert(motor >= 1 && motor <= 3);
+
     if (motor == 1 || motor == 3)
     {
         HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);
@@ -105,6 +108,10 @@ void Motor_TurnOff(u8 motor)
  */
 void Motor_Set_Pwm(int motor_left, int motor_right)
 {
+    /* 防御式编程, 参数校验 */
+    assert(motor_left >= -1000 && motor_left <= 1000);
+    assert(motor_right >= -1000 && motor_right <= 1000);
+
     if (motor_left > 0)
         Motor_Set_Direction(LEFT_MOTOR, FORWARD);
     else

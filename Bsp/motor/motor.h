@@ -7,7 +7,7 @@ extern "C" {
 
 /* ANCHOR - 头文件包含 */
 
-#include "sys.h"
+#include "main.h"
 #include "encoder.h"
 
 /* ANCHOR - 结构体声明 */
@@ -22,7 +22,7 @@ typedef struct
 
 /* 用来计算小车行驶速度的参数 */
 #define PI                3.14159265 /* PI 圆周率 */
-#define CONTROL_FREQUENCY 1.0        /* 编码器读取频率 */
+#define CONTROL_FREQUENCY 200.0      /* 编码器读取频率 5ms 一次 */
 #define ENCODER_MULTIPLES 4.0        /* 编码器倍频数 */
 #define ENCODER_PRECISION 13.0       /* 编码器精度 13 线, 一圈: 13 个脉冲数量 */
 #define REDUCTION_RATIO   30.0       /* 减速比 30 */
