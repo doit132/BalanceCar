@@ -18,6 +18,7 @@ void Test_MPU6050(void);
 void Test_OLED(void);
 void Test_Main(void);
 void Test_SoftTimer(void);
+void Test_ADC(void);
 #ifdef __cplusplus
 }
 #endif

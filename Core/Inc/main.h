@@ -32,6 +32,10 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+typedef unsigned int   u32; // u32
+typedef unsigned char  u8;  // u8
+typedef unsigned short u16; // u16
+
 /* ANCHOR - 头文件包含 */
 
 /* C 语言库相关头文件 */
@@ -40,20 +44,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
-
-/* 板级支持包相关 */
-#include "led.h"
-#include "oled.h"
-#include "mpu6050.h"
-#include "hcsr04.h"
-#include "encoder.h"
-#include "motor.h"
-#include "key.h"
-
-/* 辅助文件 */
-#include "sys.h"
-#include "delay.h"
-#include "soft_timer.h"
+#include <assert.h>
 
 /* USER CODE END Includes */
 
@@ -88,6 +79,8 @@ void Error_Handler(void);
 #define LED_GPIO_Port            GPIOA
 #define User_key_Pin             GPIO_PIN_5
 #define User_key_GPIO_Port       GPIOA
+#define ADC_Voltage_Pin          GPIO_PIN_6
+#define ADC_Voltage_GPIO_Port    GPIOA
 #define HCSR04_ECHO_Pin          GPIO_PIN_0
 #define HCSR04_ECHO_GPIO_Port    GPIOB
 #define TRIG_Pin                 GPIO_PIN_1
@@ -104,6 +97,9 @@ void Error_Handler(void);
 #define PWM_Right_GPIO_Port      GPIOA
 #define PWM_Left_Pin             GPIO_PIN_11
 #define PWM_Left_GPIO_Port       GPIOA
+#define MPU6050_INT_Pin          GPIO_PIN_12
+#define MPU6050_INT_GPIO_Port    GPIOA
+#define MPU6050_INT_EXTI_IRQn    EXTI15_10_IRQn
 #define OLED_DC_Pin              GPIO_PIN_15
 #define OLED_DC_GPIO_Port        GPIOA
 #define OLED_RES_Pin             GPIO_PIN_3

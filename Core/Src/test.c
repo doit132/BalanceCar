@@ -6,6 +6,14 @@ extern "C" {
 
 #include "test.h"
 #include "tim.h"
+#include "hcsr04.h"
+#include "mpu6050.h"
+#include "encoder.h"
+#include "motor.h"
+#include "oled.h"
+#include "soft_timer.h"
+#include "show.h"
+#include "adc.h"
 
 /* ANCHOR - 全局变量定义 */
 
@@ -14,16 +22,14 @@ extern "C" {
 void Test_HCSR04(void)
 {
     float dist;
-    char  buf[20];
     HCSR04_Init(&htim3, TIM_CHANNEL_3);
     HCSR04_Start();
     while (1)
     {
         dist = Hcsr04_Read();
         HCSR04_Start();
-        floatToString(dist, 2, buf);
-        printf("dist =%s cm\r\n", buf);
-        HAL_Delay(200);
+        printf("dist = %.2f \r\n", dist);
+        // HAL_Delay(200);
     }
 }
 
@@ -140,22 +146,54 @@ void Test_MPU6050(void)
 void Test_Main(void)
 {
     /* 定义变量存放数据 */
-    Encoder_Data_t Encoder_Data;
-    Motor_Data_t   Motor_Data;
-
-    /* 外设初始化 */
-    Encoder_Init(&Encoder_Data);
-    Motor_Init(&Motor_Data);
+    extern Encoder_Data_t Encoder_Data;
+    extern Motor_Data_t   Motor_Data;
+    extern MPU6050_Data_t MPU6050_Data;
 
     /* 测试 */
-    // Motor_Set_Pwm(100, 100);
+    // Motor_Set_Pwm(500, 500);
+
+    SoftTimer_Start(0, 5, SOFT_TIMER_MODE_PERIODIC, "Encoder");
+    SoftTimer_Start(1, 300, SOFT_TIMER_MODE_PERIODIC, "OLED");
+    SoftTimer_Start(2, 300, SOFT_TIMER_MODE_PERIODIC, "HCSR04");
 
     while (1)
     {
-        Encoder_Get_Data(&Encoder_Data);
-        printf("encoder_count_l = %d\r\n", Encoder_Data.encoder_count_l);
-        printf("encoder_count_r = %d\r\n", Encoder_Data.encoder_count_r);
-        HAL_Delay(1000);
+        // if (SoftTimer_Check(0))
+        // {
+        //     Encoder_Get_Data(&Encoder_Data);
+        //     Encoder_Change_Mode(&Encoder_Data);
+
+        //     Motor_Get_Velocity_From_Encoder(&Motor_Data, &Encoder_Data);
+        //     printf("--------------------------\r\n");
+        //     printf("encoder_count_l = %d\r\n", Encoder_Data.encoder_count_l);
+        //     printf("encoder_count_r = %d\r\n", Encoder_Data.encoder_count_r);
+        //     printf("velocity_l = %.2f mm/s\r\n", Motor_Data.Velocity_Left);
+        //     printf("velocity_r = %.2f mm/s\r\n", Motor_Data.Velocity_Right);
+        //     printf("yaw: %.2f \r\n", MPU6050_Data.yaw);
+        //     printf("roll: %.2f \r\n", MPU6050_Data.roll);
+        //     printf("pitch: %.2f \r\n", MPU6050_Data.pitch);
+        //     printf("--------------------------\r\n");
+        // }
+        if (SoftTimer_Check(1))
+        {
+            OLED_Show();
+        }
+        // if (SoftTimer_Check(2))
+        // {
+        //     HCSR04_Start();
+        //     Hcsr04Info.distance = Hcsr04_Read();
+        // }
+    }
+}
+
+void Test_ADC(void)
+{
+    int voltage;
+    while (1)
+    {
+        voltage = ADC_Get_Battery_Volt();
+        printf("voltage = %d mv\r\n", voltage);
     }
 }
 
